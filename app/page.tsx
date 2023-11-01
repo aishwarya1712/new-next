@@ -1,7 +1,12 @@
 import Link from "next/link";
 import prisma from "./db";
+import TodoItem from "@/components/TodoItem";
+function getTodos(){
+  return prisma.todo.findMany();
+}
 
 
+/* need to add this async keyword when you're making db calls */
 export default async function Home() {
   /* In react, we would have to fetch or do a useQuery from somewhere */
   // but, with server components inside NextJS, we dont need to do that
@@ -11,7 +16,7 @@ export default async function Home() {
   // uncomment below line to fake add a todo to our db
   // await prisma.todo.create({data:{title: "Test", complete: false}})
 
-  const todos = await prisma.todo.findMany();
+  const todos = await getTodos();
   return (
     <>
       <header className="flex justify-between mb-4 items-center">
@@ -24,7 +29,7 @@ export default async function Home() {
         {
           todos.map((todo) => {
             return (
-              <li key={todo.id}>{todo.title}</li>
+              <TodoItem key={todo.id} {...todo} />
             )
           })
         }
